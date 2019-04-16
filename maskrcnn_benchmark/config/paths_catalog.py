@@ -5,6 +5,7 @@ import os
 
 
 class DatasetCatalog(object):
+
     DATA_DIR = os.path.join(os.path.dirname(__file__),'../datasets')
     DATASETS = {
         "coco_2017_train": {
@@ -46,6 +47,18 @@ class DatasetCatalog(object):
         "keypoints_coco_2014_valminusminival": {
             "img_dir": "coco/val2014",
             "ann_file": "coco/annotations/person_keypoints_valminusminival2014.json",
+        },
+        "densepose_coco_2014_train": {
+            "img_dir": "coco/train2014",
+            "ann_file": "coco/annotations/densepose_coco_2014_train.json",
+        },
+        "densepose_coco_2014_minival": {
+            "img_dir": "coco/val2014",
+            "ann_file": "coco/annotations/densepose_coco_2014_minival.json",
+        },
+        "densepose_coco_2014_valminusminival": {
+            "img_dir": "coco/val2014",
+            "ann_file": "coco/annotations/densepose_coco_2014_valminusminival.json",
         },
         "voc_2007_train": {
             "data_dir": "voc/VOC2007",
@@ -108,7 +121,7 @@ class DatasetCatalog(object):
 
     @staticmethod
     def get(name):
-        if "coco" in name:
+        if "coco" in name and "dense" not in name:
             data_dir = DatasetCatalog.DATA_DIR
             attrs = DatasetCatalog.DATASETS[name]
             args = dict(
@@ -119,6 +132,17 @@ class DatasetCatalog(object):
                 factory="COCODataset",
                 args=args,
             )
+        elif "coco" in name and "dense" in name:
+            data_dir = DatasetCatalog.DATA_DIR
+            attrs = DatasetCatalog.DATASETS[name]
+            args = dict(
+                root=os.path.join(data_dir, attrs["img_dir"]),
+                ann_file=os.path.join(data_dir, attrs["ann_file"]),
+            )
+            return dict(
+                factory="DensePoseCOCODataset",
+                args=args,
+            ) 
         elif "voc" in name:
             data_dir = DatasetCatalog.DATA_DIR
             attrs = DatasetCatalog.DATASETS[name]

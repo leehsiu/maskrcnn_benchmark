@@ -22,9 +22,11 @@ _C = CN()
 
 _C.MODEL = CN()
 _C.MODEL.RPN_ONLY = False
+_C.MODEL.RPN_ON = True
 _C.MODEL.MASK_ON = False
 _C.MODEL.RETINANET_ON = False
 _C.MODEL.KEYPOINT_ON = False
+_C.MODEL.UV_ON = False
 _C.MODEL.DEVICE = "cuda"
 _C.MODEL.META_ARCHITECTURE = "GeneralizedRCNN"
 _C.MODEL.CLS_AGNOSTIC_BBOX_REG = False
@@ -61,9 +63,10 @@ _C.INPUT.TO_BGR255 = True
 _C.DATASETS = CN()
 # List of the dataset names for training, as present in paths_catalog.py
 _C.DATASETS.TRAIN = ()
+_C.DATASETS.TRAIN_PROPOSAL = ()
 # List of the dataset names for testing, as present in paths_catalog.py
 _C.DATASETS.TEST = ()
-
+_C.DATASETS.TEST_PROPOSAL = ()
 # -----------------------------------------------------------------------------
 # DataLoader
 # -----------------------------------------------------------------------------
@@ -245,6 +248,22 @@ _C.MODEL.ROI_KEYPOINT_HEAD.RESOLUTION = 14
 _C.MODEL.ROI_KEYPOINT_HEAD.NUM_CLASSES = 17
 _C.MODEL.ROI_KEYPOINT_HEAD.SHARE_BOX_FEATURE_EXTRACTOR = True
 
+
+_C.MODEL.ROI_UV_HEAD = CN()
+_C.MODEL.ROI_UV_HEAD.FEATURE_EXTRACTOR = "KeypointRCNNFeatureExtractor"
+_C.MODEL.ROI_UV_HEAD.PREDICTOR = "KeypointRCNNPredictor"
+_C.MODEL.ROI_UV_HEAD.POOLER_RESOLUTION = 14
+_C.MODEL.ROI_UV_HEAD.POOLER_SAMPLING_RATIO = 0
+_C.MODEL.ROI_UV_HEAD.POOLER_SCALES = (1.0 / 16,)
+_C.MODEL.ROI_UV_HEAD.MLP_HEAD_DIM = 1024
+_C.MODEL.ROI_UV_HEAD.CONV_LAYERS = tuple(512 for _ in range(8))
+_C.MODEL.ROI_UV_HEAD.RESOLUTION = 56
+_C.MODEL.ROI_UV_HEAD.NUM_PATCHES = 24
+_C.MODEL.ROI_UV_HEAD.NUM_CLASSES = 14
+_C.MODEL.ROI_UV_HEAD.SHARE_BOX_FEATURE_EXTRACTOR = True
+
+
+
 # ---------------------------------------------------------------------------- #
 # ResNe[X]t options (ResNets = {ResNet, ResNeXt}
 # Note that parts of a resnet may be used for both the backbone and the head
@@ -377,6 +396,9 @@ _C.MODEL.FBNET.RPN_BN_TYPE = ""
 # Solver
 # ---------------------------------------------------------------------------- #
 _C.SOLVER = CN()
+
+_C.SOLVER.NUM_GPU = 4
+
 _C.SOLVER.MAX_ITER = 40000
 
 _C.SOLVER.BASE_LR = 0.001
