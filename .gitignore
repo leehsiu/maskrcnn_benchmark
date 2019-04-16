@@ -26,5 +26,5 @@ dist/
 .idea
 
 # project dirs
-/datasets
+maskrcnn_benchmark/datasets/
 /models
